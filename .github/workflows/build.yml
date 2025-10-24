@@ -13,15 +13,13 @@ jobs:
         with:
           repository: vslavik/winsparkle
           ref: refs/tags/v0.8.3
-          path: winsparkle
+          path: .
 
       - name: Fetch deps
-        working-directory: winsparkle
         run: |
           git submodule update --init --recursive
 
       - name: Restore dependency packages
-        working-directory: winsparkle
         run: |
           nuget restore
 
@@ -33,14 +31,12 @@ jobs:
           sdk: 10.0.19041.0
 
       - name: Build
-        working-directory: winsparkle
         run: msbuild WinSparkle.sln
           /p:PlatformToolset=v142 `
           /p:Platform=x64 `
           /p:Configuration=Release `
           /p:WholeProgramOptimization=true `
           /p:Optimization=MinSpace `
-          /p:LinkerAdditionalOptions="/MERGE:_RDATA=.rdata %(LinkerAdditionalOptions)" `
           /p:FunctionLevelLinking=true
 
       - name: Archive Binary
@@ -48,4 +44,4 @@ jobs:
         with:
           name: winsparkle
           path: |
-            winsparkle/x64/Release/*.dll
+            x64/Release/*.dll
